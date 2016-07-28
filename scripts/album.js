@@ -1,5 +1,4 @@
 // Album #1
-
 var albumPicasso = {
      title: 'The Colors',
      artist: 'Pablo Picasso',
@@ -16,7 +15,6 @@ var albumPicasso = {
  };
 
 // Album #2
-
 var albumMarconi = {
      title: 'The Telephone',
      artist: 'Guglielmo Marconi',
@@ -32,6 +30,23 @@ var albumMarconi = {
      ]
  };
 
+// album #3
+var albumTheWall = {
+     title: 'The Wall',
+     artist: 'Pink Floyd',
+     label: 'Harvest - Columbia',
+     year: '1979',
+     albumArtUrl: 'https://upload.wikimedia.org/wikipedia/en/7/76/TheWallImmersion.jpg',
+     songs: [
+         { title: "In the Flesh?" , duration: '3:16' },
+         { title: "Another Brick in the Wall (Part I)"   , duration: '2:27' },
+         { title: "The Happiest Days of Our Lives" , duration: '3:21'},
+         { title: 	"Another Brick in the Wall (Part II)" , duration: '1:46' },
+         { title: 	"Mother", duration: '5:32'}
+     ]
+ };
+
+
 var createSongRow = function(songNumber, songTitle, songLength) {
     var template = 
         '<tr class="album-view-song-item">'
@@ -44,13 +59,18 @@ var createSongRow = function(songNumber, songTitle, songLength) {
     return template;
 };
 
+// grab htlm elements
+var albumTitle = document.getElementsByClassName('album-view-title')[0];
+var albumArtist = document.getElementsByClassName('album-view-artist')[0];
+var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
+var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+
+// globally set album image
+//albumImage.setAttribute('src', album.albumArtUrl);
+
 var setCurrentAlbum = function(album) {
-    // grab htlm elements
-    var albumTitle = document.getElementsByClassName('album-view-title')[0];
-    var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-    var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-    var albumImage = document.getElementsByClassName('album-cover-art')[0];
-    var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+    
     // populate grabbed elements with object attributes
     albumTitle.firstChild.nodeValue = album.title;
     albumArtist.firstChild.nodeValue = album.artist;
@@ -66,4 +86,14 @@ var setCurrentAlbum = function(album) {
     
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
+     
+     var index = 1;
+     var albums = [albumPicasso, albumMarconi, albumTheWall];
+     albumImage.addEventListener('click', function(event) {
+        setCurrentAlbum(albums[index])
+        index++;
+        if (index == albums.length) {
+            index = 0;
+        }
+     });
  };
