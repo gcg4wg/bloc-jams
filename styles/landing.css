@@ -26,9 +26,9 @@ body.landing {
      letter-spacing: 0.5rem;
      text-shadow: 1px 1px 0px rgb(58,23,63);
     opacity: 0;
-    transition-duration: 0.7;
-    -webkit-transition: 0.7s ;
-    -moz-transition: 0.7s;
+    transition-duration: 0.9 ease-in-out;
+    -webkit-transition: 0.9s ease-in-out;
+    -moz-transition: 0.9s ease-in-out;
  }
 
 .selling-points {
@@ -43,9 +43,9 @@ body.landing {
      -webkit-transform: scaleX(0.9) translateY(3rem);
      -moz-transform: scaleX(0.9) translateY(3rem);
      transform: scaleX(0.9) translateY(3rem);
-     -webkit-transition: all 0.25s ease-in-out;
-     -moz-transition: all 0.25s ease-in-out;
-     transition: all 0.25s ease-in-out;
+     -webkit-transition: all 0.5s ease-in-out;
+     -moz-transition: all 0.5s ease-in-out;
+     transition: all 0.5s ease-in-out;
      -webkit-transition-delay: 0.4s;
      -moz-transition-delay: 0.4s;
      transition-delay: 0.4s;
