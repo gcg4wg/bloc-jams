@@ -94,11 +94,18 @@ var currentlyPlayingSong = null;
 // traverse up through DOM to find parent of specified name
 var findParentByClassName = function(element, targetParent) {
     if (element) {
+        if (element.currentParent === null) {
+            alert('No parent found');
+        }
         var currentParent = element.parentElement;
+        
         while ( currentParent.className != targetParent && currentParent.className !== null) {
             currentParent = currentParent.parentElement;
         }
-        return currentParent;
+        if (currentParent.className !== targetParent) {
+            alert('No parent class matched');
+            } else { return currentParent;
+        }
     }
 };
 // returns element's song-item-number element
