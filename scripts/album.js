@@ -46,14 +46,6 @@ var albumTheWall = {
      ]
  };
 
-
-// grab album htlm elements
-var albumTitle = document.getElementsByClassName('album-view-title')[0];
-var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-var albumImage = document.getElementsByClassName('album-cover-art')[0];
-var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
-
 // template to populate album song rows
 var createSongRow = function(songNumber, songTitle, songLength) {
     var template = 
@@ -63,22 +55,28 @@ var createSongRow = function(songNumber, songTitle, songLength) {
     +   '   <td class="song-item-duration">' + songLength + '</td>'
     +   '</tr>'
     ;
-    
-    return template;
+    return $(template);
 };
 
 // populate album html elements with passed object attributes
 var setCurrentAlbum = function(album) {
-    albumTitle.firstChild.nodeValue = album.title;
-    albumArtist.firstChild.nodeValue = album.artist;
-    albumReleaseInfo.firstChild.nodeValue = album.year + ' ' + album.label;
-    albumImage.setAttribute('src', album.albumArtUrl);
-    // clear elements from working node
-    albumSongList.innerHTML = '';
+    var $albumTitle = $('.album-view-title');
+    var $albumArtist = $('.album-view-artist');
+    var $albumReleaseInfo = $('.album-view-release-info');
+    var $albumImage = $('.album-cover-art');
+    var $albumSongList = $('.album-view-song-list');
+    
+    $albumTitle.text(album.title);
+    $albumArtist.text(album.artist);
+    $albumReleaseInfo.text(album.year + ' ' + album.label);
+    $albumImage.attr('src', album.albumArtUrl);
+    
+    $albumSongList.empty();
     // loop through song list to create html
     for (var i = 0; i < album.songs.length; i++) {
-         albumSongList.innerHTML += createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
-     }
+        var $newRow = createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
+        $albumSongList.append($newRow);
+    }
  };
 
 //// grab album songs container
