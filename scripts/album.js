@@ -4,7 +4,7 @@ var createSongRow = function(songNumber, songTitle, songLength) {
         '<tr class="album-view-song-item">'
     +   '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
     +   '   <td class="song-item-title">' + songTitle + '</td>'
-    +   '   <td class="song-item-duration">' + songLength + '</td>'
+    +   '   <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
     +   '</tr>'
     ;
     var $row = $(template);
@@ -26,10 +26,6 @@ var createSongRow = function(songNumber, songTitle, songLength) {
         currentSoundFile.play();
         updateSeekBarWhileSongPlays();
         updatePlayerBarSong();
-           var $volumeFill = $('.volume .fill');
-           var $volumeThumb = $('.volume .thumb');
-           $volumeFill.width(currentVolume + '%');
-           $volumeThumb.css({left: currentVolume + '%'});
 	   } else if (currentlyPlayingSongNumber === songNumber) {
 		if (currentSoundFile.isPaused()) {
             $(this).html(pauseButtonTemplate);
@@ -91,6 +87,14 @@ var setCurrentAlbum = function(album) {
     }
  };
 
+// format time in seconds for player bar
+var filterTimeCode = function(timeInSeconds) {
+    var m = Math.floor(timeInSeconds/60);
+    //Get remaining minutes
+    timeInSeconds -= m*60;
+    var s = Math.floor(timeInSeconds);
+    return (m)+":"+(s < 10 ? '0'+s : s);
+};
 // update seek bar with live duration
 var updateSeekBarWhileSongPlays = function() {
     if (currentSoundFile) {
@@ -99,9 +103,16 @@ var updateSeekBarWhileSongPlays = function() {
             var $seekBar = $('.seek-control .seek-bar');
             
             updateSeekPercentage($seekBar, seekBarFillRatio);
+            setCurrentTimeInPlayerBar(filterTimeCode(currentSoundFile.getTime()));
         });
     }
 };
+
+// update player bar with song progross
+var setCurrentTimeInPlayerBar = function(currentTime) {
+    $presentTime = $('.seek-control .current-time');
+    $presentTime.html(currentTime)
+}
 // update seek/volume bars with event values(passed from setupSeekBars)
 var updateSeekPercentage = function($seekbar, seekBarFillRatio) {
     var offsetXPercent = seekBarFillRatio * 100;
@@ -163,6 +174,7 @@ var setSong = function(songNumber) {
     
     currentlyPlayingSongNumber = parseInt(songNumber) || null;
     currentSongFromAlbum = currentAlbum.songs[songNumber - 1] || null;
+    currentSongDuration = currentSongFromAlbum.duration;
     currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
         formats: ['mp3'],
         preload: true
@@ -239,10 +251,6 @@ var previousSong = function () {
     currentSoundFile.play();
     updateSeekBarWhileSongPlays();
     updatePlayerBarSong();
-    var $volumeFill = $('.volume .fill');
-    var $volumeThumb = $('.volume .thumb');
-    $volumeFill.width(currentVolume + '%');
-    $volumeThumb.css({left: currentVolume + '%'});
     
     var lastSongNumber = getLastSongNumber(currentSongIndex);
     var $previousSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
@@ -251,13 +259,19 @@ var previousSong = function () {
     $previousSongNumberCell.html(pauseButtonTemplate);
     $lastSongNumberCell.html(lastSongNumber);
 };
+
 // populate song info into player bar
 var updatePlayerBarSong = function() {
-
+    
     $('.currently-playing .song-name').text(currentSongFromAlbum.title);
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
+    $('.currently-playing .total-time').text(filterTimeCode(currentSongFromAlbum.duration));
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    var $volumeFill = $('.volume .fill');
+    var $volumeThumb = $('.volume .thumb');
+    $volumeFill.width(currentVolume + '%');
+    $volumeThumb.css({left: currentVolume + '%'});
 };
 
 var togglePlayFromPlayerbar = function() {
@@ -273,10 +287,6 @@ var togglePlayFromPlayerbar = function() {
         var $firstSongCell = getSongNumberCell(1);
         $firstSongCell.html(pauseButtonTemplate);
         $playPauseButton.html(playerBarPauseButton);
-        var $volumeFill = $('.volume .fill');
-        var $volumeThumb = $('.volume .thumb');
-        $volumeFill.width(currentVolume + '%');
-        $volumeThumb.css({left: currentVolume + '%'});
     } else {  var $songCell = getSongNumberCell(currentSongIndex);
             
         if (currentSoundFile.isPaused()) {   
